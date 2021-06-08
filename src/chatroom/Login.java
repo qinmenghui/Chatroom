@@ -1,5 +1,6 @@
 package chatroom;
 
+import chatroom.Tool;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,14 +8,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.net.URL;
+import java.util.Scanner;
 
 public class Login extends JFrame implements ActionListener {
     //北部
     JLabel jbl1;
 
     //中部　
-    JPanel jtp, jp2,jp2_1;
+    JPanel jtp, jp2;
     JLabel jp2_jbl1, jp2_jbl2;
     JButton jp2_jb1, jp2_jbl3;
     JTextField jp2_jtf;
@@ -26,14 +27,20 @@ public class Login extends JFrame implements ActionListener {
     }
 
     public Login() {
-        jbl1 = new JLabel(new ImageIcon("src/chatroom/xb1.png"));//背景图片
+        jbl1 = new JLabel(new ImageIcon("src/chatroom/Image/xb1.png"));//背景图片
         jp2 = new JPanel(new GridLayout(3, 3));
         jp2 = new JPanel(new GridLayout(3, 3));//设置好一个3X3的布局
-        jp2_jbl1 = new JLabel("JQ号码", JLabel.CENTER);//第一个参数为显示的文字，第二个为居中
+        jp2_jbl1 = new JLabel("JQ账号", JLabel.CENTER);//第一个参数为显示的文字，第二个为居中
         jp2_jbl2 = new JLabel("JQ密码", JLabel.CENTER);
         jp2_jbl3 = new JButton("忘记密码");
         jp2_jbl3.setForeground(Color.blue);//忘记密码为蓝色
-        jp2_jb1 = new JButton("清除号码");
+        jp2_jb1 = new JButton("注册");
+        jp2_jb1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Register();
+            }
+        });
         jp2_jtf = new JTextField();
         jp2_jpf = new JPasswordField();
         jp2_jcb1 = new JCheckBox("记住密码");
@@ -86,6 +93,9 @@ public class Login extends JFrame implements ActionListener {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         });
+        jp1.add(jp1_jb1);
+        jp1.add(jp1_jb2);
+        jp1.add(jp1_jb3);
 
 
 
@@ -105,7 +115,25 @@ public class Login extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        this.dispose();//关闭登陆界面
-        new ChatClient();//打开Client
+        Tool tool = new Tool();
+        String account = null;
+        String password = null;
+        account = jp2_jtf.getText();
+        password = String.valueOf(jp2_jpf.getPassword());
+        try {
+            if (tool.getConnection(account, password)) {
+                JOptionPane.showMessageDialog(null,"登陆成功！","提示",JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();//关闭登陆界面
+                new ChatClient();//打开Client
+            } else {JOptionPane.showMessageDialog(null,"账号或密码错误！","提示",JOptionPane.INFORMATION_MESSAGE);
+            jp2_jtf.setText("");
+            jp2_jpf.setText("");
+            jp2_jtf.requestFocusInWindow();
+
+            };
+        } catch (Exception a) {
+            a.printStackTrace();
+        }
     }
-}
+
+    }

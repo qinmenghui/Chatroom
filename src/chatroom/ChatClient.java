@@ -252,7 +252,7 @@ public class ChatClient extends JFrame {
 			}
 		});
 	}
-	
+	//实现回车键发送消息
 	public void sendMessage() {
 		if (toClientName != null && !toClientName.equals("")) {
 			String msg = messageJTextField.getText();
