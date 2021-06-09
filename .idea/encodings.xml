@@ -11,5 +11,6 @@
     <file url="file://$PROJECT_DIR$/src/chatroom/QQ.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/chatroom/Register.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/chatroom/Server_Thread.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Tool_Register.java" charset="GBK" />
   </component>
 </project>

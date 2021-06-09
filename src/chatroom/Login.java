@@ -1,14 +1,9 @@
 package chatroom;
 
-import chatroom.Tool;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.Scanner;
 
 public class Login extends JFrame implements ActionListener {
     //北部
@@ -26,6 +21,7 @@ public class Login extends JFrame implements ActionListener {
         Login login = new Login();
     }
 
+    //GUI实现
     public Login() {
         jbl1 = new JLabel(new ImageIcon("src/chatroom/Image/xb1.png"));//背景图片
         jp2 = new JPanel(new GridLayout(3, 3));
@@ -34,6 +30,12 @@ public class Login extends JFrame implements ActionListener {
         jp2_jbl2 = new JLabel("JQ密码", JLabel.CENTER);
         jp2_jbl3 = new JButton("忘记密码");
         jp2_jbl3.setForeground(Color.blue);//忘记密码为蓝色
+        jp2_jbl3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,"请联系管理员查询数据库","提示",JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         jp2_jb1 = new JButton("注册");
         jp2_jb1.addActionListener(new ActionListener() {
             @Override
@@ -114,8 +116,9 @@ public class Login extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    //登陆实现
     public void actionPerformed(ActionEvent e) {
-        Tool tool = new Tool();
+        Tool_Login tool = new Tool_Login();
         String account = null;
         String password = null;
         account = jp2_jtf.getText();

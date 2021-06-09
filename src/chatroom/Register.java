@@ -1,9 +1,14 @@
 package chatroom;
 
+import chatroom.Tool_Register;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**实现注册功能**/
 public class Register extends JFrame {
@@ -35,15 +40,15 @@ public class Register extends JFrame {
     public void init() {
         //标题
         this.setTitle("注册JQ新账号");
-        this.setSize(350,250);
+        this.setSize(350, 250);
         getContentPane().setLayout(null);
         setResizable(false);
         JLabel label = new JLabel("账号*");
-        label.setBounds(24,36,59,17);
+        label.setBounds(24, 36, 59, 17);
         getContentPane().add(label);
 
         account = new JTextField();//账号
-        account.setBounds(90,34,110,22);
+        account.setBounds(90, 34, 110, 22);
         getContentPane().add(account);
 
         JLabel label5 = new JLabel("密码:*");
@@ -63,7 +68,7 @@ public class Register extends JFrame {
         getContentPane().add(pwd2Fld);
 
         jl = new JLabel(new ImageIcon("src/chatroom/Image/tx.png"));
-        jl.setBounds(220,34,100,100);
+        jl.setBounds(220, 34, 100, 100);
         //按钮
         ok = new JButton("确认");
         ok.setBounds(27, 176, 60, 28);
@@ -86,19 +91,24 @@ public class Register extends JFrame {
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                if(pwdFld.getPassword().length==0||pwd2Fld.getPassword().length==0||account.getText().length()==0){
-                    JOptionPane.showMessageDialog(null,"带*为必填内容！","提示",JOptionPane.INFORMATION_MESSAGE);
-                }else if(!new String(pwdFld.getPassword()).equals(new String(pwd2Fld.getPassword()))){
-                    JOptionPane.showMessageDialog(null,"两次密码输入不一致","提示",JOptionPane.INFORMATION_MESSAGE);
+                if (pwdFld.getPassword().length == 0 || pwd2Fld.getPassword().length == 0 || account.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "带*为必填内容！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                } else if (!new String(pwdFld.getPassword()).equals(new String(pwd2Fld.getPassword()))) {
+                    JOptionPane.showMessageDialog(null, "两次密码输入不一致", "提示", JOptionPane.INFORMATION_MESSAGE);
                     pwdFld.setText("");
                     pwd2Fld.setText("");
                     pwdFld.requestFocusInWindow();//焦点回到密码
-                }else{
-                    JOptionPane.showMessageDialog(null,"注册成功","提示",JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                     Tool_Register tool = new Tool_Register();
+                    String account1 = account.getText();
+                    String password = String.valueOf(pwdFld.getPassword());
+                    try{tool.insert(account1,password);
+                    }catch (Exception a){
+                        a.printStackTrace();
+                    }
+                    dispose();
 
                 }
-
-
             }
         });
         reset.addActionListener(new ActionListener() {
@@ -110,7 +120,9 @@ public class Register extends JFrame {
                 account.requestFocusInWindow();//账号获得焦点
             }
         });
+
     }
+
 
 
 

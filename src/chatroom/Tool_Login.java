@@ -1,7 +1,7 @@
 package chatroom;
 
 import java.sql.*;
-public class Tool {
+public class Tool_Login {
     //1.定义方法，并接受参数
     public static boolean getConnection(String account, String password) throws Exception{
         // 2.注册驱动
