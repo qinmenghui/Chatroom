@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 
 public class Client_Thread extends Thread {
 
+	public static ChatClient cc;
 	private Socket socket;
 
-	private ChatClient cc;
 
 	private BufferedReader reader;
 
@@ -67,7 +67,7 @@ public class Client_Thread extends Thread {
 		}
 	}
 	
-	public void addDate() {
+	public static void addDate() {
 		Date now = new Date();
 		SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd E kk:mm:ss");
 		cc.displayTextArea.append("\n" + f.format(now) + "\n");

@@ -76,18 +76,25 @@ public class Server_Thread extends Thread {
 					for (int i = 0; i < toClientNames.length - 1; i++) {
 						Server_Thread st = threadList.get(toClientNames[i].trim());
 //						if(st != this) {
-							st.writer.println(loginName + ": " + message);
+						st.writer.println(loginName + ": " + message);
 //						}
 					}
 					writer.println(loginName + ": " + message);    //向自己也发送信息
+					Date now = new Date();
+					SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd E kk:mm:ss");
+					displayTextArea.append("\n" +f.format(now) + "\n");
+					displayTextArea.append(loginName+":"+message+"\n");
+					displayTextArea.setCaretPosition(displayTextArea.getText().length());
+
 				}
+
 			} catch (IOException e) {
 				logout();
 				break;
 			}
 		}
 	}
-	
+
 	public void logout() {
 		Iterator it = threadList.entrySet().iterator();
 		while (it.hasNext()) {

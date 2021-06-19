@@ -1,9 +1,11 @@
-package chatroom;
+package chatroom.Login;
 
+import chatroom.ChatClient;
+import chatroom.Register;
+import chatroom.Register.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class Login extends JFrame implements ActionListener {
     //北部
@@ -99,8 +101,6 @@ public class Login extends JFrame implements ActionListener {
         jp1.add(jp1_jb2);
         jp1.add(jp1_jb3);
 
-
-
 //然后把北、中、南三个部分的组件全部插入到JFrame中，并且给JFrame设置好大小，关闭的方式，最后设置JFrame可见。
 
 // 把JP1放到南部
@@ -115,7 +115,6 @@ public class Login extends JFrame implements ActionListener {
         this.setResizable(false);
         this.setVisible(true);
     }
-
     //登陆实现
     public void actionPerformed(ActionEvent e) {
         Tool_Login tool = new Tool_Login();

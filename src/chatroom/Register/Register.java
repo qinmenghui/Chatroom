@@ -20,6 +20,7 @@ public class Register extends JFrame {
     private JButton reset;
     private JButton cancel;
     private JLabel jl;
+    private JLabel jl1;
 
 
 
@@ -30,6 +31,7 @@ public class Register extends JFrame {
     public Register() {
         this.init();
         this.add(jl);
+        //this.add(jl1);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -67,8 +69,11 @@ public class Register extends JFrame {
         pwd2Fld.setBounds(90, 105, 110, 22);
         getContentPane().add(pwd2Fld);
 
-        jl = new JLabel(new ImageIcon("src/chatroom/Image/tx.png"));
-        jl.setBounds(220, 34, 100, 100);
+        jl = new JLabel(new ImageIcon("src/chatroom/Image/ranran.png"));
+        jl.setBounds(210, 30, 130, 130);
+
+        jl1 = new JLabel("关注然然，顿顿解馋捏～");
+        jl1.setBounds(24,135,150,22);
         //按钮
         ok = new JButton("确认");
         ok.setBounds(27, 176, 60, 28);

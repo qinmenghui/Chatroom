@@ -84,7 +84,7 @@ public class ChatServer extends JFrame {
 	
 	public static void main(String [] args) {
 		ChatServer cs = new ChatServer();
-		String str = JOptionPane.showInputDialog(null, "请输入你要监听的端口，端口应为（1024-65535）的整数", "端口设置", JOptionPane.PLAIN_MESSAGE);
+		String str = JOptionPane.showInputDialog(null, "请输入你要监听的端口，端口应为（1024-65535）的整数,(默认端口为6666)", "端口设置", JOptionPane.PLAIN_MESSAGE);
 		try {
 			port = Integer.parseInt(str);
 		} catch (NumberFormatException e) {

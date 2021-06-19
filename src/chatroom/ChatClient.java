@@ -1,16 +1,21 @@
 package chatroom;
 
+import Decoder.BASE64Decoder;
+import Decoder.BASE64Encoder;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 public class ChatClient extends JFrame {
 
@@ -18,11 +23,13 @@ public class ChatClient extends JFrame {
 	public JTextArea displayTextArea;
 	public List currentClientList;
 	public JTextField clientNameTextField;
-	private JTextField messageJTextField;
+	private JTextPane messageJTextPane;
 	public JButton loginButton, logoutJButton;
 	public JButton sendJButton;
-	
+	public JButton sendFileicon;
+	public JButton sendicon;
 	JMenuItem setIPJMenuItem, setPortJMenuItem, aboutJMenuItem;
+	JFileChooser jdir;
 
 	private Socket socket;
 
@@ -31,8 +38,8 @@ public class ChatClient extends JFrame {
 
 	private StringBuffer toClientName = null;
 
-	public String ip;
-	public int port = -1;
+	public static String ip = "127.0.0.1";
+	public static int port = 6666;
 
 	public ChatClient() {
 		this.setTitle("局域网聊天程序的设计与实现");
@@ -87,6 +94,7 @@ public class ChatClient extends JFrame {
 		// constraints.gridheight = 5;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		JPanel currentClientJPanel = new JPanel(new BorderLayout());
+		currentClientJPanel.setBackground(Color.GREEN);
 		currentClientLabel = new JLabel("当前在线好友:");
 		currentClientJPanel.add(currentClientLabel, BorderLayout.NORTH);
 		currentClientList = new List();
@@ -96,15 +104,41 @@ public class ChatClient extends JFrame {
 
 		currentClientList.setMultipleMode(true);        //设置列表是多选模式
 
+		constraints.weightx = 1.0;
+		constraints.weighty = 3.0;
+		// constraints.gridheight = 1;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		sendicon = new JButton("表情");
+		/*sendicon.setBackground(Color.pink);
+		sendicon.setOpaque(true);
+		sendicon.setBorderPainted(false);
+		*/
+		container.add(sendicon);
+
+		constraints.weightx = 1.0;
+		constraints.weighty = 3.0;
+		// constraints.gridheight = 1;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		sendFileicon = new JButton("发送文件");
+		/*sendFileicon.setBackground(Color.cyan);
+		sendFileicon.setOpaque(true);
+		sendFileicon.setBorderPainted(false);
+		//颜色
+		*/
+		container.add(sendFileicon);
+
+
 		constraints.weightx = 7.0;
 		constraints.weighty = 3.0;
 		// constraints.gridheight = 1;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		messageJTextField = new JTextField();
+		messageJTextPane = new JTextPane();
 
 		//JScrollPane messageScrollPane = new JScrollPane(messageTextField);
-		layout.setConstraints(messageJTextField, constraints);
-		container.add(messageJTextField);
+		layout.setConstraints(messageJTextPane, constraints);
+		container.add(messageJTextPane);
+
+
 
 
 		constraints.weightx = 1.0;
@@ -115,6 +149,7 @@ public class ChatClient extends JFrame {
 		sendJButton.setEnabled(false);
 		layout.setConstraints(sendJButton, constraints);
 		container.add(sendJButton);
+		
 
 		this.setBounds(400, 100, 600, 600);
 		this.setVisible(true);
@@ -134,7 +169,7 @@ public class ChatClient extends JFrame {
 		setMonitorForSentJButton();       //为发送按钮就行事件监听
 		loginButton.addActionListener(new Monitor()); //为登陆按钮设置监听
 		
-		messageJTextField.addKeyListener(new KeyAdapter() {
+		messageJTextPane.addKeyListener(new KeyAdapter() {
 			
 			public void keyPressed(KeyEvent e) {
 				//当键盘输入回车键当时候发送消息
@@ -143,7 +178,22 @@ public class ChatClient extends JFrame {
 				}
 			}
 		});
-		
+		sendFileicon.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					String name =Transfer();
+					String i = ioToBase64(name);
+					base64ToIo(i,name);
+					//System.out.println(i);
+				} catch (IOException ioException) {
+					ioException.printStackTrace();
+				}
+
+			}
+		});
+
 	}
 	
 	public void createJMenuBar() {
@@ -255,10 +305,10 @@ public class ChatClient extends JFrame {
 	//实现回车键发送消息
 	public void sendMessage() {
 		if (toClientName != null && !toClientName.equals("")) {
-			String msg = messageJTextField.getText();
+			String msg = messageJTextPane.getText();
 			if (!msg.equals("")) {
 				writer.println(toClientName + "#" + msg);
-				messageJTextField.setText("");
+				messageJTextPane.setText("");
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"你没有输入如何消息，请输入内容后再发送！", "提示",
@@ -270,6 +320,95 @@ public class ChatClient extends JFrame {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
+
+	public String Transfer(){//文件选择
+		String p = null;
+		try {
+
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			jdir = new JFileChooser();
+
+//设置选择路径模式
+			jdir.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+				//FileNameExtensionFilter filter = new FileNameExtensionFilter("指定文件类型",p);
+				//jdir.setFileFilter(filter);
+
+//过滤文件类型
+
+
+//设置对话框标题
+			jdir.setDialogTitle("请选择文件路径");
+
+			if (JFileChooser.APPROVE_OPTION == jdir.showOpenDialog(null)) {//用户点击了确定
+				p = jdir.getSelectedFile().getAbsolutePath();//取得路径选择
+				System.out.println(p);
+				
+			}
+		} catch (ClassNotFoundException classNotFoundException) {
+			classNotFoundException.printStackTrace();
+		} catch (InstantiationException instantiationException) {
+			instantiationException.printStackTrace();
+		} catch (IllegalAccessException illegalAccessException) {
+			illegalAccessException.printStackTrace();
+		} catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+			unsupportedLookAndFeelException.printStackTrace();
+		}
+		return p;
+	}
+
+
+	public String ioToBase64(String f) throws IOException {//编码64
+		String fileName = f; //源文件
+		String strBase64 = null;
+		try {
+			InputStream in = new FileInputStream(fileName);
+			// in.available()返回文件的字节长度
+			byte[] bytes = new byte[in.available()];
+			// 将文件中的内容读入到数组中
+			in.read(bytes);
+			strBase64 = new BASE64Encoder().encode(bytes);      //将字节流数组转换为字符串
+			in.close();
+		} catch (FileNotFoundException fe) {
+			fe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		System.out.println(strBase64);
+		return strBase64;
+	}
+
+
+	public void base64ToIo(String strBase64,String name) throws IOException {//解码
+		String string = strBase64;
+		String Name = name;
+		File tempFile = new File(Name.trim());
+		String fileName2 = "/Users/qinmenghui/Chatroom/src/File/";
+		String fileName3 = tempFile.getName();
+		String fileName=fileName2+fileName3;//生成的新文件
+		try {
+			// 解码，然后将字节转换为文件
+			byte[] bytes = new BASE64Decoder().decodeBuffer(string);   //将字符串转换为byte数组
+			ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+			byte[] buffer = new byte[1024];
+			FileOutputStream out = new FileOutputStream(fileName);
+			int bytesum = 0;
+			int byteread = 0;
+			while ((byteread = in.read(buffer)) != -1) {
+				bytesum += byteread;
+				out.write(buffer, 0, byteread); //文件写操作
+			}
+			System.out.println("文件存放完成");
+			Client_Thread.addDate();
+			Client_Thread.cc.displayTextArea.append("文件传输成功！");
+//            AsrMain o=new AsrMain(fileName);
+//            System.out.println(o.getms());
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
+
 
 	private class Monitor implements ActionListener {
 
@@ -297,8 +436,7 @@ public class ChatClient extends JFrame {
 							"警告", JOptionPane.ERROR_MESSAGE);
 				} catch (UnknownHostException e1) {
 					displayTextArea.append(e1.getMessage());
-					displayTextArea.setCaretPosition(displayTextArea.getText()
-							.length());
+					displayTextArea.setCaretPosition(displayTextArea.getText().length());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -307,6 +445,7 @@ public class ChatClient extends JFrame {
 			}
 		}
 	}
+
 
 	public static void main(String[] args) {
 		new ChatClient();

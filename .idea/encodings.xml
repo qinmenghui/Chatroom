@@ -7,10 +7,13 @@
     <file url="file://$PROJECT_DIR$/src/chatroom/Client_Thread.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/chatroom/FileTransferClient.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/chatroom/FileTransferServer.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/chatroom/Login.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Login/Login.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Login/Login.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/chatroom/QQ.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/chatroom/Register.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Register/Register.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Register/Register.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Register/Tool_Register.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/chatroom/Register/Tool_Register.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/chatroom/Server_Thread.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/chatroom/Tool_Register.java" charset="GBK" />
   </component>
 </project>
